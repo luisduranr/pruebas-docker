@@ -40,12 +40,15 @@ COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/src ./src
+# Copiar el script de entrada
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-# Configurar variable de entorno (opcional)
+# Variables de entorno
 ENV NODE_ENV=production
 
-# Exponer el puerto
 EXPOSE 3001
 
-# Comando para iniciar la aplicación
-CMD ["pnpm", "start:prod"]
+ENTRYPOINT ["/app/entrypoint.sh"]
