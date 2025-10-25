@@ -1,6 +1,6 @@
 #!/bin/bash
 # PRIMERO DEBE LOGUEARSE EN LOCAL CON docker login
-# login para poder subir imagenes al repositorio de gitlab
+
 
 
 # docker login  -u luisfer34
