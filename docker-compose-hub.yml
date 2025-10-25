@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: fullstack-app-postgres
+    environment:
+      POSTGRES_USER: johndoe
+      POSTGRES_PASSWORD: randompassword
+      POSTGRES_DB: db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U johndoe -d db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    container_name: fullstack-app-backend
+    image: luisfer34/ucb-backend-1:latest
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgresql://johndoe:randompassword@postgres:5432/db
+      JWT_SECRET: my-secret-key
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    # build:
+    #   context: ./frontend
+    #   dockerfile: Dockerfile
+    container_name: fullstack-app-frontend
+    image: luisfer34/ucb-frontend-1:latest
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
