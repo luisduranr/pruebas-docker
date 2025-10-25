@@ -1,8 +1,5 @@
 #!/bin/bash
 # PRIMERO DEBE LOGUEARSE EN LOCAL CON docker login
-
-
-
 # docker login  -u luisfer34
 
 imagenes=("ucb-backend-1:latest"  "ucb-frontend-1:latest")
@@ -16,7 +13,6 @@ do
    docker tag $imagen $url_registry/$imagen
    docker push $url_registry/$imagen
 done
-
 
 # docker push luisfer34/ucb-backend-1:1.0.0
 
