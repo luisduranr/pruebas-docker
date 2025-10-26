@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: back-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: back-dev-label
+  template:
+    metadata:
+      labels:
+        app: back-dev-label
+    spec:
+      containers:
+      - name: deploy-back
+        image: luisfer34/ucb-backend-1:latest
+        ports:
+        - containerPort: 3001
+        envFrom:
+          - configMapRef:
+              name: env-dev-back
+
+

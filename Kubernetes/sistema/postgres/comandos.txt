@@ -1,0 +1,9 @@
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+kubectl create namespace postgres
+helm install my-postgresql bitnami/postgresql --version 18.1.1  -f values.yml --namespace postgres
+
+helm upgrade my-postgresql bitnami/postgresql --version 18.1.1  -f values.yml --namespace postgres
+
+helm delete my-postgresql --namespace postgres
