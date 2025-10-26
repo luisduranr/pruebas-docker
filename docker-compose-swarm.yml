@@ -1,0 +1,55 @@
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: johndoe
+      POSTGRES_PASSWORD: randompassword
+      POSTGRES_DB: db
+    networks:
+      - fullstack-red
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U johndoe -d db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  backend:
+    image: luisfer34/ucb-backend-1:latest
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgresql://johndoe:randompassword@postgres:5432/db
+      JWT_SECRET: my-secret-key
+      NODE_ENV: production
+    command: sh -c "/app/entrypoint.sh"
+    networks:
+      - fullstack-red
+    ports:
+      - "3001:3001"
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+  frontend:
+    image: luisfer34/ucb-frontend-1:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - fullstack-red
+    environment:
+      NEXT_PUBLIC_API_URL: http://127.0.0.1:3001
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+networks:
+  fullstack-red:
+    external: true
+volumes:
+  postgres_data:

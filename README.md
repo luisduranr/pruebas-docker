@@ -64,6 +64,40 @@ pnpm prisma db push
 pnpm start:dev
 ```
 
+# SWARM
+### Inicializar Swarm si no lo has hecho
+```bash
+docker swarm init
+```
+### Desplegar el stack
+```bash
+# crear red
+docker network create -d overlay fullstack-red
+# ejecutar stack
+docker stack deploy -c docker-compose-swarm.yml fullstack --detach=false
+```
+### Eliminar stack
+```bash
+docker stack rm fullstack
+```
+### Ver servicios
+```bash
+docker stack services fullstack
+```
+### Ver logs de backend
+```bash
+docker service logs fullstack_backend --follow
+
+docker service logs fullstack_backend
+docker service logs fullstack_migrate
+docker service logs postgres_postgres
+
+docker network create --driver bridge fullstack-red
+```
+### Desactivar Swarm
+```bash
+docker swarm leave --force
+```
 ### Frontend Setup
 
 <!-- 1. Install dependencies:
@@ -104,3 +138,4 @@ pnpm dev
 ## 📝 License
 
 MIT
+
